@@ -180,95 +180,195 @@ def build_presentation(output_path):
     r_d.font.color.rgb = RGBColor(148, 163, 184)
 
     # =========================================================================
-    # SLIDE 2: AGENDA & 3 PILLARS (Concise)
+    # SLIDE 2: 3 PILLARS (全篇三大核心脈絡)
     # =========================================================================
     slide2 = prs.slides.add_slide(blank_layout)
     set_slide_background(slide2, C_LIGHT_BG)
-    add_header(slide2, "報告導覽", "全篇核心脈絡與簡報章節", "從歷史規律、數據矛盾到台灣實況，釐清 AI 時代的真實挑戰")
+    add_header(slide2, "報告導覽", "全篇三大核心脈絡", "從歷史規律、數據矛盾到台灣實況，釐清 AI 時代的真實挑戰")
 
     pillars = [
-        ("01 歷史定律", "消滅規則，創造新職", "長期總就業必然增長，但「轉型期世代」需承擔陣痛（恩格斯停頓）。", C_PRIMARY),
-        ("02 數據解密", "算法不同，結論不同", "高盛算工作份量、麥肯錫算工時、WEF 算人數，不可混為一談。", C_TEAL),
-        ("03 台灣診斷", "結構錯位，缺工轉型", "失業率 3.36% 創 26 年新低，核心問題是「缺工與技能脫節」。", C_AMBER)
+        ("01 歷史定律", "消滅規則，創造新職", "長期總就業必然增長，但「轉型期世代」需承擔陣痛。", [
+            ("兩百年歷史定律", "七次技術變革終局皆創造更多新工作，總就業未曾萎縮。"),
+            ("任務替代本質", "技術永遠先消滅「規則化任務」，而非淘汰整個人類崗位。"),
+            ("恩格斯停頓警訊", "生產力飆升至工資分享常落後數十年，轉型痛點落在過渡世代。")
+        ], C_PRIMARY, C_PRIMARY_LIGHT),
+        ("02 數據解密", "算法不同，結論不同", "指標定義各自為政，高盛、麥肯錫與 WEF 不可混為一談。", [
+            ("高盛「工作份量」", "44% 任務可被自動化，代表任務滲透度，絕非裁員 44%。"),
+            ("麥肯錫「工時接管」", "估算 20~30% 工時被接管，人力被釋放轉向更高階任務。"),
+            ("WEF 與美丹實證", "淨增 1,200 萬職缺；丹麥實證顯示技術更偏向賦能與輔助。")
+        ], C_TEAL, C_TEAL_LIGHT),
+        ("03 台灣診斷", "結構錯位，缺工轉型", "失業率 3.36% 創 26 年新低，核心問題是「缺工與技能脫節」。", [
+            ("顛覆大失業假說", "失業率創 26 年新低，少子化與高齡化使各產業普遍大缺工。"),
+            ("雙重結構性錯位", "「有工無人做，有人無工做」，學校培育與實務需求嚴重斷層。"),
+            ("企業賦能非裁員", "金融與服務業「導入不等於裁員」，關鍵在流程重組與技能升級。")
+        ], C_AMBER, C_AMBER_LIGHT)
     ]
 
-    for i, (tag, headline, desc, color) in enumerate(pillars):
+    for i, (tag, headline, highlight, points, color, light_bg) in enumerate(pillars):
         left = Inches(0.8 + i * 4.0)
-        card = add_card(slide2, left, Inches(1.85), Inches(3.733), Inches(2.0), C_WHITE, C_CARD_BORDER)
+        card_w = Inches(3.733)
+        card_h = Inches(5.1)
+        card = add_card(slide2, left, Inches(1.8), card_w, card_h, C_WHITE, RGBColor(226, 232, 240))
         
-        top_bar = slide2.shapes.add_shape(MSO_SHAPE.RECTANGLE, left, Inches(1.85), Inches(3.733), Inches(0.08))
+        # Top color accent bar
+        top_bar = slide2.shapes.add_shape(MSO_SHAPE.RECTANGLE, left, Inches(1.8), card_w, Inches(0.09))
         top_bar.fill.solid()
         top_bar.fill.fore_color.rgb = color
         top_bar.line.fill.background()
 
-        tf = card.text_frame
+        # Tag / Pillar Badge
+        tag_box = slide2.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left + Inches(0.28), Inches(2.08), Inches(1.5), Inches(0.32))
+        tag_box.fill.solid()
+        tag_box.fill.fore_color.rgb = light_bg
+        tag_box.line.color.rgb = color
+        tag_box.line.width = Pt(0.75)
+        tf_tag = tag_box.text_frame
+        tf_tag.word_wrap = True
+        tf_tag.margin_left = tf_tag.margin_top = tf_tag.margin_right = tf_tag.margin_bottom = 0
+        p_tag = tf_tag.paragraphs[0]
+        p_tag.alignment = PP_ALIGN.CENTER
+        r_tag = p_tag.add_run()
+        r_tag.text = tag
+        r_tag.font.name = FONT_MAIN
+        r_tag.font.size = Pt(11)
+        r_tag.font.bold = True
+        r_tag.font.color.rgb = color
+
+        # Text Frame for Headline & Content
+        tbox = slide2.shapes.add_textbox(left + Inches(0.28), Inches(2.52), card_w - Inches(0.56), Inches(4.2))
+        tf = tbox.text_frame
         tf.word_wrap = True
-        tf.margin_left = tf.margin_right = Inches(0.25)
-        tf.margin_top = Inches(0.25)
+        tf.margin_left = tf.margin_top = tf.margin_right = tf.margin_bottom = 0
 
-        p = tf.paragraphs[0]
-        r = p.add_run()
-        r.text = tag
-        r.font.name = FONT_MAIN
-        r.font.size = Pt(11)
-        r.font.bold = True
-        r.font.color.rgb = color
-
-        p_h = tf.add_paragraph()
-        p_h.space_before = Pt(4)
+        # Headline
+        p_h = tf.paragraphs[0]
         r_h = p_h.add_run()
         r_h.text = headline
         r_h.font.name = FONT_MAIN
-        r_h.font.size = Pt(15)
+        r_h.font.size = Pt(19)
         r_h.font.bold = True
         r_h.font.color.rgb = C_TEXT_DARK
 
-        p_d = tf.add_paragraph()
-        p_d.space_before = Pt(6)
-        r_d = p_d.add_run()
-        r_d.text = desc
-        r_d.font.name = FONT_MAIN
-        r_d.font.size = Pt(10.5)
-        r_d.font.color.rgb = C_TEXT_MUTED
+        # Highlight Callout
+        p_hl = tf.add_paragraph()
+        p_hl.space_before = Pt(10)
+        r_hl = p_hl.add_run()
+        r_hl.text = f"💡 {highlight}"
+        r_hl.font.name = FONT_MAIN
+        r_hl.font.size = Pt(11.5)
+        r_hl.font.bold = True
+        r_hl.font.color.rgb = color
 
-    # Bottom Agenda Roadmap
-    agenda_card = add_card(slide2, Inches(0.8), Inches(4.1), Inches(11.733), Inches(2.8), C_WHITE, C_CARD_BORDER)
-    tf_a = agenda_card.text_frame
-    tf_a.word_wrap = True
-    tf_a.margin_left = tf_a.margin_right = Inches(0.4)
-    tf_a.margin_top = Inches(0.25)
+        # Divider line
+        p_div = tf.add_paragraph()
+        p_div.space_before = Pt(8)
+        r_div = p_div.add_run()
+        r_div.text = "—" * 24
+        r_div.font.name = FONT_MAIN
+        r_div.font.size = Pt(8)
+        r_div.font.color.rgb = RGBColor(203, 213, 225)
 
-    pa = tf_a.paragraphs[0]
-    ra = pa.add_run()
-    ra.text = "章節地圖"
-    ra.font.name = FONT_MAIN
-    ra.font.size = Pt(13)
-    ra.font.bold = True
-    ra.font.color.rgb = C_PRIMARY
+        # 3 Detailed Points
+        for pt_title, pt_desc in points:
+            p_pt = tf.add_paragraph()
+            p_pt.space_before = Pt(8)
+            r_t = p_pt.add_run()
+            r_t.text = f"• {pt_title}：\n  "
+            r_t.font.name = FONT_MAIN
+            r_t.font.size = Pt(11)
+            r_t.font.bold = True
+            r_t.font.color.rgb = C_TEXT_DARK
 
-    agenda_points = [
-        ("第一章・歷史規律", "兩百年來七次技術變革的共同模式，與生成式 AI 的本質轉變"),
-        ("第二章・數據解密", "為什麼全球統計互相矛盾？三種算法與美丹實證對決"),
-        ("第三章・職場分化", "消失的一端（規則化任務）vs 成長的一端（分析思辨與 AI 溢價）"),
-        ("第四章・台灣實況", "失業率 26 年新低卻大缺工；金融業與服務業「導入不等於裁員」"),
-        ("第五至七章・落差與啟示", "產學思辨脫鉤、政策資源分配與未來個人的行動指引")
+            r_d = p_pt.add_run()
+            r_d.text = pt_desc
+            r_d.font.name = FONT_MAIN
+            r_d.font.size = Pt(10.5)
+            r_d.font.color.rgb = C_TEXT_MUTED
+
+    # =========================================================================
+    # SLIDE 2B: AGENDA ROADMAP (全篇簡報章節地圖)
+    # =========================================================================
+    slide2_agenda = prs.slides.add_slide(blank_layout)
+    set_slide_background(slide2_agenda, C_LIGHT_BG)
+    add_header(slide2_agenda, "報告導覽", "全篇簡報章節地圖", "循序漸進剖析技術規律、全球數據辨析、勞動結構分化與個人行動指引")
+
+    agenda_chapters = [
+        ("第一章", "歷史規律", "兩百年來七次技術變革的共同模式，與生成式 AI 的本質轉變",
+         "回顧蒸汽機至智慧手機的替代規律；剖析高學歷「規則化任務」被取代本質與恩格斯停頓", C_PRIMARY, C_PRIMARY_LIGHT),
+        ("第二章", "數據解密", "為什麼全球統計互相矛盾？三種算法與美丹實證對決",
+         "拆解高盛（任務）、麥肯錫（工時）、WEF（人數）算法差異，以實證釐清真實衝擊", C_TEAL, C_TEAL_LIGHT),
+        ("第三章", "職場分化", "消失的一端（規則化任務）vs 成長的一端（分析思辨與 AI 溢價）",
+         "勞動市場兩極化走勢：中階文書與代碼遭受擠壓，複合思辨與人際協調溢價提升", RGBColor(99, 102, 241), RGBColor(238, 242, 255)),
+        ("第四章", "台灣實況", "失業率 26 年新低卻大缺工；金融業與服務業「導入不等於裁員」",
+         "檢視台灣少子化與大缺工並存實況；企業 AI 導入以「賦能與效率化」為核心而非裁員", C_AMBER, C_AMBER_LIGHT),
+        ("第五至七章", "落差與啟示", "產學思辨脫鉤、政策資源分配與未來個人的行動指引",
+         "探討教育端與產業界技能落差、政府政策資源精準挹注，以及個人終身學習三維指引", C_ROSE, C_ROSE_LIGHT)
     ]
 
-    for title, desc in agenda_points:
-        p_item = tf_a.add_paragraph()
-        p_item.space_before = Pt(5)
-        r_t = p_item.add_run()
-        r_t.text = f"• {title}： "
-        r_t.font.name = FONT_MAIN
-        r_t.font.size = Pt(11)
-        r_t.font.bold = True
-        r_t.font.color.rgb = C_TEXT_DARK
+    for i, (ch_tag, ch_title, ch_headline, ch_desc, color, light_bg) in enumerate(agenda_chapters):
+        row_top = Inches(1.80 + i * 1.02)
+        row_h = Inches(0.92)
+        row_w = Inches(11.733)
+        left = Inches(0.8)
 
-        r_d = p_item.add_run()
-        r_d.text = desc
-        r_d.font.name = FONT_MAIN
-        r_d.font.size = Pt(11)
-        r_d.font.color.rgb = C_TEXT_MUTED
+        # Outer Card
+        card = add_card(slide2_agenda, left, row_top, row_w, row_h, C_WHITE, RGBColor(226, 232, 240))
+
+        # Left Accent Line
+        bar = slide2_agenda.shapes.add_shape(MSO_SHAPE.RECTANGLE, left, row_top, Inches(0.08), row_h)
+        bar.fill.solid()
+        bar.fill.fore_color.rgb = color
+        bar.line.fill.background()
+
+        # Left Chapter Badge Box
+        badge_box = slide2_agenda.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left + Inches(0.22), row_top + Inches(0.16), Inches(2.1), Inches(0.60))
+        badge_box.fill.solid()
+        badge_box.fill.fore_color.rgb = light_bg
+        badge_box.line.color.rgb = color
+        badge_box.line.width = Pt(0.75)
+        tf_bb = badge_box.text_frame
+        tf_bb.word_wrap = True
+        tf_bb.margin_left = tf_bb.margin_top = tf_bb.margin_right = tf_bb.margin_bottom = 0
+        
+        p_b1 = tf_bb.paragraphs[0]
+        p_b1.alignment = PP_ALIGN.CENTER
+        r_b1 = p_b1.add_run()
+        r_b1.text = ch_tag
+        r_b1.font.name = FONT_MAIN
+        r_b1.font.size = Pt(10)
+        r_b1.font.bold = True
+        r_b1.font.color.rgb = color
+
+        p_b2 = tf_bb.add_paragraph()
+        p_b2.alignment = PP_ALIGN.CENTER
+        r_b2 = p_b2.add_run()
+        r_b2.text = ch_title
+        r_b2.font.name = FONT_MAIN
+        r_b2.font.size = Pt(13)
+        r_b2.font.bold = True
+        r_b2.font.color.rgb = C_TEXT_DARK
+
+        # Right Content Box
+        tbox = slide2_agenda.shapes.add_textbox(left + Inches(2.55), row_top + Inches(0.12), row_w - Inches(2.8), Inches(0.68))
+        tf = tbox.text_frame
+        tf.word_wrap = True
+        tf.margin_left = tf.margin_top = tf.margin_right = tf.margin_bottom = 0
+
+        p_title = tf.paragraphs[0]
+        r_tit = p_title.add_run()
+        r_tit.text = ch_headline
+        r_tit.font.name = FONT_MAIN
+        r_tit.font.size = Pt(12.5)
+        r_tit.font.bold = True
+        r_tit.font.color.rgb = C_TEXT_DARK
+
+        p_sub = tf.add_paragraph()
+        p_sub.space_before = Pt(3)
+        r_sub = p_sub.add_run()
+        r_sub.text = ch_desc
+        r_sub.font.name = FONT_MAIN
+        r_sub.font.size = Pt(10.5)
+        r_sub.font.color.rgb = C_TEXT_MUTED
 
     # =========================================================================
     # SLIDE 3: 7 REVOLUTIONS (High-impact Timeline Grid)
