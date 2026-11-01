@@ -180,117 +180,11 @@ def build_presentation(output_path):
     r_d.font.color.rgb = RGBColor(148, 163, 184)
 
     # =========================================================================
-    # SLIDE 2: 3 PILLARS (全篇三大核心脈絡)
+    # SLIDE 2: AGENDA ROADMAP (簡報目錄)
     # =========================================================================
     slide2 = prs.slides.add_slide(blank_layout)
     set_slide_background(slide2, C_LIGHT_BG)
-    add_header(slide2, "導讀指南", "全篇報告核心：看清 AI 與工作的真實樣貌", "與其被「AI 搶飯碗」的新聞嚇自己，不如從歷史規律、全球數據與台灣現場看清真相")
-
-    pillars = [
-        ("01 歷史定律", "淘汰的是雜事，不是人類", "長遠來看工作一定會變多，但轉型期的那代人總要扛下代價。", [
-            ("兩百年的鐵律", "七次技術革命每次都先淘汰舊職缺，但最後創造的新工作永遠比消失的更多。"),
-            ("誰最容易被取代", "技術最先吃掉的，永遠是「能照 SOP 照抄」的固定流程，而不是人類本身。"),
-            ("殘酷的現實", "歷史上的「恩格斯停頓」告訴我們：工廠賺翻了，工人的薪水卻可能卡住幾十年。")
-        ], C_PRIMARY, C_PRIMARY_LIGHT),
-        ("02 數據解密", "算盤打法不同，結論差很多", "高盛算任務、麥肯錫算時間、WEF 數人頭，千萬別混在一起談。", [
-            ("高盛被誤解的 3 億", "報告說 3 億工作「受影響」，是指工作內容被科技滲透，不是開除 3 億人。"),
-            ("麥肯錫算的工時", "AI 幫忙省下 20~30% 的作業時間，代表工作變輕鬆高效，不是裁掉三成人。"),
-            ("看淨增數會盲目", "WEF 說全球淨增 1,200 萬個職缺，但消失的工作跟新開的技能完全對不上。")
-        ], C_TEAL, C_TEAL_LIGHT),
-        ("03 台灣現場", "根本沒大失業，而是到處缺人", "失業率創 26 年新低，台灣真正的痛點是「缺工與學用脫節」。", [
-            ("打破失業迷思", "失業率跌到 3.36% 歷史新低，少子化與缺工並存，壓根沒有所謂「AI 裁員潮」。"),
-            ("結構嚴重錯位", "現場是「企業找不到懂用 AI 的人，畢業生找不到合適的高薪缺」，兩頭對不上。"),
-            ("公司導入不是裁員", "台灣金融與餐飲業引進 AI，全是因為人力吃緊拿來當救火隊，不是為了精簡編制。")
-        ], C_AMBER, C_AMBER_LIGHT)
-    ]
-
-    for i, (tag, headline, highlight, points, color, light_bg) in enumerate(pillars):
-        left = Inches(0.8 + i * 4.0)
-        card_w = Inches(3.733)
-        card_h = Inches(5.1)
-        card = add_card(slide2, left, Inches(1.8), card_w, card_h, C_WHITE, RGBColor(226, 232, 240))
-        
-        # Top color accent bar
-        top_bar = slide2.shapes.add_shape(MSO_SHAPE.RECTANGLE, left, Inches(1.8), card_w, Inches(0.09))
-        top_bar.fill.solid()
-        top_bar.fill.fore_color.rgb = color
-        top_bar.line.fill.background()
-
-        # Tag / Pillar Badge
-        tag_box = slide2.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left + Inches(0.28), Inches(2.08), Inches(1.5), Inches(0.32))
-        tag_box.fill.solid()
-        tag_box.fill.fore_color.rgb = light_bg
-        tag_box.line.color.rgb = color
-        tag_box.line.width = Pt(0.75)
-        tf_tag = tag_box.text_frame
-        tf_tag.word_wrap = True
-        tf_tag.margin_left = tf_tag.margin_top = tf_tag.margin_right = tf_tag.margin_bottom = 0
-        p_tag = tf_tag.paragraphs[0]
-        p_tag.alignment = PP_ALIGN.CENTER
-        r_tag = p_tag.add_run()
-        r_tag.text = tag
-        r_tag.font.name = FONT_MAIN
-        r_tag.font.size = Pt(11)
-        r_tag.font.bold = True
-        r_tag.font.color.rgb = color
-
-        # Text Frame for Headline & Content
-        tbox = slide2.shapes.add_textbox(left + Inches(0.28), Inches(2.52), card_w - Inches(0.56), Inches(4.2))
-        tf = tbox.text_frame
-        tf.word_wrap = True
-        tf.margin_left = tf.margin_top = tf.margin_right = tf.margin_bottom = 0
-
-        # Headline
-        p_h = tf.paragraphs[0]
-        r_h = p_h.add_run()
-        r_h.text = headline
-        r_h.font.name = FONT_MAIN
-        r_h.font.size = Pt(19)
-        r_h.font.bold = True
-        r_h.font.color.rgb = C_TEXT_DARK
-
-        # Highlight Callout
-        p_hl = tf.add_paragraph()
-        p_hl.space_before = Pt(10)
-        r_hl = p_hl.add_run()
-        r_hl.text = f"💡 {highlight}"
-        r_hl.font.name = FONT_MAIN
-        r_hl.font.size = Pt(11.5)
-        r_hl.font.bold = True
-        r_hl.font.color.rgb = color
-
-        # Divider line
-        p_div = tf.add_paragraph()
-        p_div.space_before = Pt(8)
-        r_div = p_div.add_run()
-        r_div.text = "—" * 24
-        r_div.font.name = FONT_MAIN
-        r_div.font.size = Pt(8)
-        r_div.font.color.rgb = RGBColor(203, 213, 225)
-
-        # 3 Detailed Points
-        for pt_title, pt_desc in points:
-            p_pt = tf.add_paragraph()
-            p_pt.space_before = Pt(8)
-            r_t = p_pt.add_run()
-            r_t.text = f"• {pt_title}：\n  "
-            r_t.font.name = FONT_MAIN
-            r_t.font.size = Pt(11)
-            r_t.font.bold = True
-            r_t.font.color.rgb = C_TEXT_DARK
-
-            r_d = p_pt.add_run()
-            r_d.text = pt_desc
-            r_d.font.name = FONT_MAIN
-            r_d.font.size = Pt(10.5)
-            r_d.font.color.rgb = C_TEXT_MUTED
-
-    # =========================================================================
-    # SLIDE 2B: AGENDA ROADMAP (全篇簡報章節地圖)
-    # =========================================================================
-    slide2_agenda = prs.slides.add_slide(blank_layout)
-    set_slide_background(slide2_agenda, C_LIGHT_BG)
-    add_header(slide2_agenda, "章節導覽", "全篇簡報章節地圖", "五大板塊循序漸進：從歷史規律出發，辨析統計迷思，深挖台灣現場與個人生存之道")
+    add_header(slide2, "簡報目錄", "簡報目錄：五大核心板塊", "從歷史規律、全球數據解密到台灣實況，循序剖析 AI 時代真實挑戰與行動指引")
 
     agenda_chapters = [
         ("第一章", "歷史規律", "兩百年來七次技術變革的共同劇本，與這次生成式 AI 的本質跳躍",
@@ -312,16 +206,16 @@ def build_presentation(output_path):
         left = Inches(0.8)
 
         # Outer Card
-        card = add_card(slide2_agenda, left, row_top, row_w, row_h, C_WHITE, RGBColor(226, 232, 240))
+        card = add_card(slide2, left, row_top, row_w, row_h, C_WHITE, RGBColor(226, 232, 240))
 
         # Left Accent Line
-        bar = slide2_agenda.shapes.add_shape(MSO_SHAPE.RECTANGLE, left, row_top, Inches(0.08), row_h)
+        bar = slide2.shapes.add_shape(MSO_SHAPE.RECTANGLE, left, row_top, Inches(0.08), row_h)
         bar.fill.solid()
         bar.fill.fore_color.rgb = color
         bar.line.fill.background()
 
         # Left Chapter Badge Box
-        badge_box = slide2_agenda.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left + Inches(0.22), row_top + Inches(0.16), Inches(2.1), Inches(0.60))
+        badge_box = slide2.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left + Inches(0.22), row_top + Inches(0.16), Inches(2.1), Inches(0.60))
         badge_box.fill.solid()
         badge_box.fill.fore_color.rgb = light_bg
         badge_box.line.color.rgb = color
@@ -349,7 +243,7 @@ def build_presentation(output_path):
         r_b2.font.color.rgb = C_TEXT_DARK
 
         # Right Content Box
-        tbox = slide2_agenda.shapes.add_textbox(left + Inches(2.55), row_top + Inches(0.12), row_w - Inches(2.8), Inches(0.68))
+        tbox = slide2.shapes.add_textbox(left + Inches(2.55), row_top + Inches(0.12), row_w - Inches(2.8), Inches(0.68))
         tf = tbox.text_frame
         tf.word_wrap = True
         tf.margin_left = tf.margin_top = tf.margin_right = tf.margin_bottom = 0
