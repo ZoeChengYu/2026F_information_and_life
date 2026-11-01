@@ -371,87 +371,334 @@ def build_presentation(output_path):
         r_sub.font.color.rgb = C_TEXT_MUTED
 
     # =========================================================================
-    # SLIDE 3: 7 REVOLUTIONS (High-impact Timeline Grid)
+    # SLIDE 3A: 歷史技術變革（一）：動力革命與機械化時代
     # =========================================================================
-    slide3 = prs.slides.add_slide(blank_layout)
-    set_slide_background(slide3, C_LIGHT_BG)
-    add_header(slide3, "第一章・歷史規律", "兩百年來七次技術變革：重複的規律", "每次變革都先消滅「規則化任務」，總就業長期回升，但轉型期需付代價")
+    slide3_p1 = prs.slides.add_slide(blank_layout)
+    set_slide_background(slide3_p1, C_LIGHT_BG)
+    add_header(slide3_p1, "第一章・歷史進程", "歷史技術變革（一）：動力革命與機械化時代", "從體力釋放到工廠聚集——就業結構首次由農業大規模轉移至工業與服務業")
 
-    revs = [
-        ("1. 工業革命", "18-19 世紀", "蒸汽機與紡織機", "手工紡織工失業，勞動力轉入工廠；生活水準停滯數十年（恩格斯停頓）"),
-        ("2. 電力與內燃機", "19-20 世紀初", "汽車與裝配線", "馬伕鐵匠萎縮；福特流水線降低門檻，創造製造、公路與物流業"),
-        ("3. 農業機械化", "20 世紀中", "拖拉機與收割機", "美國農業就業從 40% 降至 2% 以下；勞動力成功移轉至製造與服務業"),
-        ("4. 自動化機器人", "1960s-90s", "組裝與焊接機器人", "中低技能製造業萎縮；結合全球化分工，形成美國「鏽帶」衰退"),
-        ("5. 資訊科技與電腦", "1970s-00s", "PC 與套裝軟體", "打字簿記員消失，就業極化；高技能薪資上升（技能偏向型進步）"),
-        ("6. 網際網路與電商", "1990s-10s", "電商與平台經濟", "實體零售重創（百視達倒閉）；誕生數位行銷、現代物流與外送零工"),
-        ("7. 智慧型手機", "2007 年至今", "App 與行動支付", "催生行動應用生態圈，重構交通出行、餐飲配送與自媒體創作")
+    stage1_revs = [
+        ("01 工業革命", "18-19 世紀", "蒸汽動力與現代工廠", "蒸汽機・機械紡織機", "家庭作坊走向集中工廠，引發盧德運動", [
+            ("舊職衝擊", "手工紡織工、家庭工匠大量失業；英國爆發「盧德運動」砸毀機器抗議。"),
+            ("新職誕生", "催生現代工廠流水體系、鐵路運輸、煤礦開採與機械維護專職。"),
+            ("歷史代價", "【恩格斯停頓】生產力暴增數十年，工人工資與生活水平卻停滯不前。")
+        ], C_PRIMARY, C_PRIMARY_LIGHT),
+        ("02 電力與內燃機", "19-20 世紀初", "流水線與大眾消費", "發電機・汽車・福特流水線", "技術門檻降低，吸納大量農村無經驗勞工", [
+            ("舊職衝擊", "馬伕、鐵匠、馬車製造與馬具產業全面萎縮淘汰，傳統運輸瓦解。"),
+            ("新職誕生", "汽車製造、加油站網絡、公路營造工程、現代物流與家用電器產業。"),
+            ("制度創新", "福特流水線大幅「降低技能門檻」，讓未受訓勞工能迅速成為工廠主力。")
+        ], C_TEAL, C_TEAL_LIGHT),
+        ("03 農業機械化", "20 世紀中葉", "農業人口大轉移", "拖拉機・聯合收割機・化肥", "單一巨型產業萎縮，並未造成長期總體失業", [
+            ("舊職衝擊", "美國農業就業人口從 1900 年約 40% 驟降至今日不到 2% 的極低水平。"),
+            ("新職誕生", "釋放出數千萬農業勞動力，無縫移轉至二戰後繁榮的工業與商業服務業。"),
+            ("歷史啟示", "單一龐大行業萎縮不會造成總失業，反而推動全社會產業升級與富裕。")
+        ], C_AMBER, C_AMBER_LIGHT)
     ]
 
-    card_w = Inches(3.733)
-    card_h = Inches(2.1)
-    
-    # Grid: 3 top, 3 bottom, plus 1 big takeaway card on the bottom-right
-    positions = [
-        (Inches(0.8), Inches(1.85)),
-        (Inches(4.8), Inches(1.85)),
-        (Inches(8.8), Inches(1.85)),
-        (Inches(0.8), Inches(4.2)),
-        (Inches(4.8), Inches(4.2)),
-        (Inches(8.8), Inches(4.2)),
-    ]
+    for i, (tag, period, headline, tech, highlight, points, color, light_bg) in enumerate(stage1_revs):
+        left = Inches(0.8 + i * 4.0)
+        card_w = Inches(3.733)
+        card_h = Inches(5.1)
+        card = add_card(slide3_p1, left, Inches(1.8), card_w, card_h, C_WHITE, RGBColor(226, 232, 240))
+        
+        # Top color accent bar
+        top_bar = slide3_p1.shapes.add_shape(MSO_SHAPE.RECTANGLE, left, Inches(1.8), card_w, Inches(0.09))
+        top_bar.fill.solid()
+        top_bar.fill.fore_color.rgb = color
+        top_bar.line.fill.background()
 
-    for idx in range(6):
-        title, time_span, tech, impact = revs[idx]
-        pos_x, pos_y = positions[idx]
-        card = add_card(slide3, pos_x, pos_y, card_w, card_h, C_WHITE, C_CARD_BORDER)
-        tf = card.text_frame
+        # Tag / Era Badge
+        tag_box = slide3_p1.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left + Inches(0.28), Inches(2.08), Inches(2.3), Inches(0.32))
+        tag_box.fill.solid()
+        tag_box.fill.fore_color.rgb = light_bg
+        tag_box.line.color.rgb = color
+        tag_box.line.width = Pt(0.75)
+        tf_tag = tag_box.text_frame
+        tf_tag.word_wrap = True
+        tf_tag.margin_left = tf_tag.margin_top = tf_tag.margin_right = tf_tag.margin_bottom = 0
+        p_tag = tf_tag.paragraphs[0]
+        p_tag.alignment = PP_ALIGN.CENTER
+        r_tag = p_tag.add_run()
+        r_tag.text = f"{tag} ({period})"
+        r_tag.font.name = FONT_MAIN
+        r_tag.font.size = Pt(10.5)
+        r_tag.font.bold = True
+        r_tag.font.color.rgb = color
+
+        # Content Box
+        tbox = slide3_p1.shapes.add_textbox(left + Inches(0.28), Inches(2.52), card_w - Inches(0.56), Inches(4.2))
+        tf = tbox.text_frame
         tf.word_wrap = True
-        tf.margin_left = tf.margin_right = Inches(0.2)
-        tf.margin_top = Inches(0.18)
+        tf.margin_left = tf.margin_top = tf.margin_right = tf.margin_bottom = 0
 
-        p = tf.paragraphs[0]
+        # Headline
+        p_h = tf.paragraphs[0]
+        r_h = p_h.add_run()
+        r_h.text = headline
+        r_h.font.name = FONT_MAIN
+        r_h.font.size = Pt(17)
+        r_h.font.bold = True
+        r_h.font.color.rgb = C_TEXT_DARK
+
+        # Key Tech Subtitle
+        p_tech = tf.add_paragraph()
+        p_tech.space_before = Pt(3)
+        r_tech = p_tech.add_run()
+        r_tech.text = f"關鍵技術：{tech}"
+        r_tech.font.name = FONT_MAIN
+        r_tech.font.size = Pt(10.5)
+        r_tech.font.bold = True
+        r_tech.font.color.rgb = color
+
+        # Highlight Callout
+        p_hl = tf.add_paragraph()
+        p_hl.space_before = Pt(8)
+        r_hl = p_hl.add_run()
+        r_hl.text = f"💡 {highlight}"
+        r_hl.font.name = FONT_MAIN
+        r_hl.font.size = Pt(10.5)
+        r_hl.font.bold = True
+        r_hl.font.color.rgb = C_TEXT_DARK
+
+        # Divider line
+        p_div = tf.add_paragraph()
+        p_div.space_before = Pt(6)
+        r_div = p_div.add_run()
+        r_div.text = "—" * 24
+        r_div.font.name = FONT_MAIN
+        r_div.font.size = Pt(8)
+        r_div.font.color.rgb = RGBColor(203, 213, 225)
+
+        # 3 Points
+        for pt_title, pt_desc in points:
+            p_pt = tf.add_paragraph()
+            p_pt.space_before = Pt(7)
+            r_t = p_pt.add_run()
+            r_t.text = f"• {pt_title}：\n  "
+            r_t.font.name = FONT_MAIN
+            r_t.font.size = Pt(10.5)
+            r_t.font.bold = True
+            r_t.font.color.rgb = C_TEXT_DARK
+
+            r_d = p_pt.add_run()
+            r_d.text = pt_desc
+            r_d.font.name = FONT_MAIN
+            r_d.font.size = Pt(10)
+            r_d.font.color.rgb = C_TEXT_MUTED
+
+    # =========================================================================
+    # SLIDE 3B: 歷史技術變革（二）：自動化、電腦與網路浪潮
+    # =========================================================================
+    slide3_p2 = prs.slides.add_slide(blank_layout)
+    set_slide_background(slide3_p2, C_LIGHT_BG)
+    add_header(slide3_p2, "第一章・歷史進程", "歷史技術變革（二）：自動化、電腦與網路浪潮", "從藍領組裝到白領文書——「規則化任務」逐步被演算法與硬體替代")
+
+    stage2_revs = [
+        ("04 自動化機器人", "1960s-1990s", "機械手臂與產線自動化", "組裝機器人・焊接設備", "體力重複崗位流失，重創歐美傳統鏽帶", [
+            ("舊職衝擊", "汽車、金屬製造中低技能組裝工、焊接工等例行體力崗位大幅縮減。"),
+            ("新職誕生", "工業機器人維護工程師、自動化產線設計、跨國供應鏈管理與精密檢驗。"),
+            ("區域痛點", "結合全球化貿易分工，導致歐美「鏽帶」傳統工業城市面臨長期轉型衰退。")
+        ], RGBColor(99, 102, 241), RGBColor(238, 242, 255)),
+        ("05 電腦與資訊科技", "1970s-2000s", "個人電腦與文書數位化", "PC・辦公軟體・關聯式資料庫", "高技能薪資溢價，中技能例行文書遭掏空", [
+            ("舊職衝擊", "打字員、電話接線生、紙本簿記員、實體旅行社等例行性文書工作銳減。"),
+            ("新職誕生", "軟體工程師、IT 資訊網管、系統架構師、資料庫管理員等高薪專業崗位。"),
+            ("極化效應", "【技能偏向型進步】高技能薪資飆升，中技能遭掏空，職場走向 M 型化。")
+        ], C_PRIMARY, C_PRIMARY_LIGHT),
+        ("06 網際網路與電商", "1990s-2010s", "平台經濟與通路重構", "WWW・電商平台・數位支付", "商業通路從實體走向線上，催生零工經濟", [
+            ("舊職衝擊", "實體唱片行、百視達 (Blockbuster) 錄影帶租借、大量實體連鎖店倒閉。"),
+            ("新職誕生", "電商營運、數位行銷、現代智慧倉儲、平台外送、跨國零工經濟。"),
+            ("通路顛覆", "商業交易走向線上化，打破地域限制，資訊傳遞與通路邊際成本趨近於零。")
+        ], C_TEAL, C_TEAL_LIGHT)
+    ]
+
+    for i, (tag, period, headline, tech, highlight, points, color, light_bg) in enumerate(stage2_revs):
+        left = Inches(0.8 + i * 4.0)
+        card_w = Inches(3.733)
+        card_h = Inches(5.1)
+        card = add_card(slide3_p2, left, Inches(1.8), card_w, card_h, C_WHITE, RGBColor(226, 232, 240))
+        
+        # Top color accent bar
+        top_bar = slide3_p2.shapes.add_shape(MSO_SHAPE.RECTANGLE, left, Inches(1.8), card_w, Inches(0.09))
+        top_bar.fill.solid()
+        top_bar.fill.fore_color.rgb = color
+        top_bar.line.fill.background()
+
+        # Tag / Era Badge
+        tag_box = slide3_p2.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left + Inches(0.28), Inches(2.08), Inches(2.3), Inches(0.32))
+        tag_box.fill.solid()
+        tag_box.fill.fore_color.rgb = light_bg
+        tag_box.line.color.rgb = color
+        tag_box.line.width = Pt(0.75)
+        tf_tag = tag_box.text_frame
+        tf_tag.word_wrap = True
+        tf_tag.margin_left = tf_tag.margin_top = tf_tag.margin_right = tf_tag.margin_bottom = 0
+        p_tag = tf_tag.paragraphs[0]
+        p_tag.alignment = PP_ALIGN.CENTER
+        r_tag = p_tag.add_run()
+        r_tag.text = f"{tag} ({period})"
+        r_tag.font.name = FONT_MAIN
+        r_tag.font.size = Pt(10.5)
+        r_tag.font.bold = True
+        r_tag.font.color.rgb = color
+
+        # Content Box
+        tbox = slide3_p2.shapes.add_textbox(left + Inches(0.28), Inches(2.52), card_w - Inches(0.56), Inches(4.2))
+        tf = tbox.text_frame
+        tf.word_wrap = True
+        tf.margin_left = tf.margin_top = tf.margin_right = tf.margin_bottom = 0
+
+        # Headline
+        p_h = tf.paragraphs[0]
+        r_h = p_h.add_run()
+        r_h.text = headline
+        r_h.font.name = FONT_MAIN
+        r_h.font.size = Pt(17)
+        r_h.font.bold = True
+        r_h.font.color.rgb = C_TEXT_DARK
+
+        # Key Tech Subtitle
+        p_tech = tf.add_paragraph()
+        p_tech.space_before = Pt(3)
+        r_tech = p_tech.add_run()
+        r_tech.text = f"關鍵技術：{tech}"
+        r_tech.font.name = FONT_MAIN
+        r_tech.font.size = Pt(10.5)
+        r_tech.font.bold = True
+        r_tech.font.color.rgb = color
+
+        # Highlight Callout
+        p_hl = tf.add_paragraph()
+        p_hl.space_before = Pt(8)
+        r_hl = p_hl.add_run()
+        r_hl.text = f"💡 {highlight}"
+        r_hl.font.name = FONT_MAIN
+        r_hl.font.size = Pt(10.5)
+        r_hl.font.bold = True
+        r_hl.font.color.rgb = C_TEXT_DARK
+
+        # Divider line
+        p_div = tf.add_paragraph()
+        p_div.space_before = Pt(6)
+        r_div = p_div.add_run()
+        r_div.text = "—" * 24
+        r_div.font.name = FONT_MAIN
+        r_div.font.size = Pt(8)
+        r_div.font.color.rgb = RGBColor(203, 213, 225)
+
+        # 3 Points
+        for pt_title, pt_desc in points:
+            p_pt = tf.add_paragraph()
+            p_pt.space_before = Pt(7)
+            r_t = p_pt.add_run()
+            r_t.text = f"• {pt_title}：\n  "
+            r_t.font.name = FONT_MAIN
+            r_t.font.size = Pt(10.5)
+            r_t.font.bold = True
+            r_t.font.color.rgb = C_TEXT_DARK
+
+            r_d = p_pt.add_run()
+            r_d.text = pt_desc
+            r_d.font.name = FONT_MAIN
+            r_d.font.size = Pt(10)
+            r_d.font.color.rgb = C_TEXT_MUTED
+
+    # =========================================================================
+    # SLIDE 3C: 兩百年來七次技術變革：重複的規律（最後才點名！）
+    # =========================================================================
+    slide3_p3 = prs.slides.add_slide(blank_layout)
+    set_slide_background(slide3_p3, C_LIGHT_BG)
+    add_header(slide3_p3, "第一章・歷史規律", "兩百年來七次技術變革：重複的規律", "歷史重複證明：技術從不消滅總就業，但「能被寫成明確規則」的任務必被淘汰")
+
+    # Table Container
+    table_shape = slide3_p3.shapes.add_table(8, 4, Inches(0.8), Inches(1.8), Inches(11.733), Inches(3.35))
+    table = table_shape.table
+    table.columns[0].width = Inches(2.35)
+    table.columns[1].width = Inches(2.2)
+    table.columns[2].width = Inches(3.4)
+    table.columns[3].width = Inches(3.783)
+
+    t_headers = ["變革階段與年代", "核心突破技術", "🔻 被淘汰的「規則化任務」", "🔺 催生的「全新職業與產業」"]
+    t_rows = [
+        ["01 工業革命 (18-19 世紀)", "蒸汽機・機械紡織機", "手工紡織工、工匠（盧德運動砸機器）", "工廠工人、鐵路運輸、煤礦與維修"],
+        ["02 電力與內燃機 (19-20 世紀初)", "發電機・汽車・福特裝配線", "馬伕、鐵匠、馬車製造與馬具業", "汽車製造、公路物流、家電維修"],
+        ["03 農業機械化 (20 世紀中葉)", "拖拉機・收割機・化肥", "傳統農耕勞力（美國就業 40%→2%）", "戰後製造業工人、現代商業與服務業"],
+        ["04 自動化機器人 (1960s-1990s)", "機械手臂・自動化組裝焊接", "汽車組裝工、焊接工等例行體力崗位", "自動化設備工程師、跨國供應鏈管理"],
+        ["05 電腦資訊 (1970s-2000s)", "個人電腦 (PC)・辦公軟體", "打字員、謄寫員、簿記員、電話接線生", "軟體工程師、IT 資訊網管（就業 M 型化）"],
+        ["06 網際網路 (1990s-2010s)", "WWW・電商平台・數位支付", "實體唱片行、百視達錄影帶、實體門市", "電商營運、數位行銷、倉儲物流、外送零工"],
+        ["07 智慧手機 (2007 年至今)", "App 生態系・4G/5G・行動支付", "傳統按鍵通訊、紙本票券、傳統叫車", "App 開發者、社群自媒體、即時外送出行"]
+    ]
+
+    for col_idx, h_text in enumerate(t_headers):
+        cell = table.cell(0, col_idx)
+        cell.fill.solid()
+        cell.fill.fore_color.rgb = RGBColor(234, 240, 250)
+        p = cell.text_frame.paragraphs[0]
+        p.alignment = PP_ALIGN.CENTER
         r = p.add_run()
-        r.text = f"{title} ({time_span})"
+        r.text = h_text
         r.font.name = FONT_MAIN
-        r.font.size = Pt(11.5)
+        r.font.size = Pt(10)
         r.font.bold = True
         r.font.color.rgb = C_PRIMARY
 
-        p_t = tf.add_paragraph()
-        r_t = p_t.add_run()
-        r_t.text = f"關鍵技術：{tech}"
-        r_t.font.name = FONT_MAIN
-        r_t.font.size = Pt(10)
-        r_t.font.bold = True
-        r_t.font.color.rgb = C_TEXT_DARK
+    for row_idx, row_data in enumerate(t_rows):
+        for col_idx, text in enumerate(row_data):
+            cell = table.cell(row_idx + 1, col_idx)
+            cell.fill.solid()
+            if row_idx == 6:  # Highlight 07 Smartphone
+                cell.fill.fore_color.rgb = RGBColor(240, 249, 255)
+            elif row_idx % 2 == 1:
+                cell.fill.fore_color.rgb = RGBColor(248, 250, 252)
+            else:
+                cell.fill.fore_color.rgb = C_WHITE
+            
+            p = cell.text_frame.paragraphs[0]
+            r = p.add_run()
+            r.text = text
+            r.font.name = FONT_MAIN
+            r.font.size = Pt(9.5)
+            if col_idx == 0:
+                r.font.bold = True
+                r.font.color.rgb = C_PRIMARY if row_idx < 6 else RGBColor(30, 64, 175)
+            else:
+                r.font.color.rgb = C_TEXT_DARK
 
-        p_i = tf.add_paragraph()
-        p_i.space_before = Pt(3)
-        r_i = p_i.add_run()
-        r_i.text = impact
-        r_i.font.name = FONT_MAIN
-        r_i.font.size = Pt(9.5)
-        r_i.font.color.rgb = C_TEXT_MUTED
+    # Bottom Takeaway Card: 3 Laws
+    takeaway_card = add_card(slide3_p3, Inches(0.8), Inches(5.35), Inches(11.733), Inches(1.5), C_PRIMARY_LIGHT, RGBColor(191, 219, 254))
+    tf_tc = takeaway_card.text_frame
+    tf_tc.word_wrap = True
+    tf_tc.margin_left = tf_tc.margin_right = Inches(0.35)
+    tf_tc.margin_top = Inches(0.16)
 
-    # Bottom Banner replacing card 7 + takeaway
-    bottom_banner = add_card(slide3, Inches(0.8), Inches(6.45), Inches(11.733), Inches(0.75), C_PRIMARY_LIGHT, RGBColor(191, 219, 254))
-    tf_bb = bottom_banner.text_frame
-    tf_bb.word_wrap = True
-    tf_bb.margin_left = Inches(0.3)
-    tf_bb.margin_top = Inches(0.12)
-    p_bb = tf_bb.paragraphs[0]
-    r_bb = p_bb.add_run()
-    r_bb.text = "📌 第 7 次智慧手機（2007~）與歷史核心教訓： "
-    r_bb.font.name = FONT_MAIN
-    r_bb.font.size = Pt(10.5)
-    r_bb.font.bold = True
-    r_bb.font.color.rgb = C_PRIMARY
+    ptc_h = tf_tc.paragraphs[0]
+    rtc_h = ptc_h.add_run()
+    rtc_h.text = "📌 貫穿兩百年來七次技術變革的「三大歷史鐵律」"
+    rtc_h.font.name = FONT_MAIN
+    rtc_h.font.size = Pt(12)
+    rtc_h.font.bold = True
+    rtc_h.font.color.rgb = C_PRIMARY
 
-    r_bb2 = p_bb.add_run()
-    r_bb2.text = "技術不會消滅總就業，但「能被寫成明確規則」的工作最先被淘汰，轉型成本落在來不及換技能的人身上。"
-    r_bb2.font.name = FONT_MAIN
-    r_bb2.font.size = Pt(10)
-    r_bb2.font.color.rgb = C_TEXT_DARK
+    laws = [
+        ("鐵律一・總就業長期必然回升", "生產力提升帶動全社會財富擴張，創造出全新且更龐大的消費需求與未知產業崗位。"),
+        ("鐵律二・淘汰的是「規則化任務」", "凡能被編碼為明確步驟的工作必被自動化，淘汰的是任務而非整個人類崗位。"),
+        ("鐵律三・轉型成本由過渡世代承擔", "【恩格斯停頓】技術擴散遠快於教育與制度適應，陣痛與低薪落在來不及換技能的人身上。")
+    ]
+
+    for l_title, l_desc in laws:
+        p_law = tf_tc.add_paragraph()
+        p_law.space_before = Pt(3)
+        r_lt = p_law.add_run()
+        r_lt.text = f"• {l_title}： "
+        r_lt.font.name = FONT_MAIN
+        r_lt.font.size = Pt(10)
+        r_lt.font.bold = True
+        r_lt.font.color.rgb = C_TEXT_DARK
+
+        r_ld = p_law.add_run()
+        r_ld.text = l_desc
+        r_ld.font.name = FONT_MAIN
+        r_ld.font.size = Pt(10)
+        r_ld.font.color.rgb = C_TEXT_MUTED
 
     # =========================================================================
     # SLIDE 4: GENERATIVE AI - WHAT'S UNIQUE (High Contrast Comparison)
