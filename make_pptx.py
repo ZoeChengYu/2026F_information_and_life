@@ -166,7 +166,7 @@ def build_presentation(output_path):
     p_members = tf_g.add_paragraph()
     p_members.space_before = Pt(10)
     r_m = p_members.add_run()
-    r_m.text = "36 黃柏瑋 (113590023) ｜ 37 黃熠瑋 (113590044) ｜"
+    r_m.text = "36 黃柏瑋 (113590023) ｜ 37 黃熠瑋 (113590044) ｜ 38 楊承諭 (113590051)"
     r_m.font.name = FONT_MAIN
     r_m.font.size = Pt(13)
     r_m.font.color.rgb = C_WHITE
@@ -1565,7 +1565,7 @@ def build_presentation(output_path):
     p_info.alignment = PP_ALIGN.CENTER
     p_info.space_before = Pt(24)
     r_info = p_info.add_run()
-    r_info.text = "第 16 組：36 黃柏瑋 ｜ 37 黃熠瑋 ｜"
+    r_info.text = "第 16 組：36 黃柏瑋 ｜ 37 黃熠瑋 ｜ 38 楊承諭"
     r_info.font.name = FONT_MAIN
     r_info.font.size = Pt(12)
     r_info.font.color.rgb = RGBColor(148, 163, 184)
